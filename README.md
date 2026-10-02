@@ -1,11 +1,11 @@
 #  tidal accelerations
 
-[![DOI](https://zenodo.org/badge/DOI/<your_zenodo_doi>.svg)](https://doi.org/<your_zenodo_doi>)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23111591.svg)](https://doi.org/10.5281/zenodo.23111591)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 This code calculates the tidal accelerations that the objects of a planetary system exert on each other over time, using only a minimal set of physical and orbital parameters. It was developed to estimate the potential for tidal heating, and with it for (cryo-)volcanism and liquid water as a solvent for life, in planetary systems where too little is known for a full tidal heating model (Love numbers, tidal dissipation, interior structure). The solar system, where volcanism and subsurface oceans are known for many objects, serves as the "gold standard" to calibrate the results, which can then be transferred to extrasolar planetary systems such as TRAPPIST-1. Simulation in **C++** (using the header-only linear algebra library **Eigen**), plotting in **Python3**, and a **Makefile** for easy building.
 
-[Klaus Paschek](https://klauspaschek.com) [![ORCID](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-2603-4236), [Kirchhoff-Institute for Physics](https://www.kip.uni-heidelberg.de/), Heidelberg University, Heidelberg, Germany  
+[Klaus Paschek](https://klauspaschek.com) [![ORCID](https://info.orcid.org/wp-content/uploads/2019/11/orcid_16x16.png)](https://orcid.org/0000-0003-2603-4236), [Kirchhoff-Institute for Physics](https://www.kip.uni-heidelberg.de/), Heidelberg University, Heidelberg, Germany
 (now at the [Max Planck Institute for Astronomy](https://www.mpia.de/institute/staff/113334), Heidelberg, Germany)
 
 Setup and data of the extrasolar planetary system TRAPPIST-1 by Arthur Roßmann, Kirchhoff-Institute for Physics, Heidelberg University.
@@ -122,7 +122,7 @@ The time span is split into 15 parts (option `--split`), each plotted as a **png
 `make plots` creates the bar charts for all objects of all simulations in `plots/` (about 5000 plots at 300 dpi, which takes one to two hours on a computer with 12 cores).
 
 ## Citation
-If you use this code, please cite it using the DOI provided by Zenodo: [doi:<your_zenodo_doi>](https://doi.org/<your_zenodo_doi>), and the paper describing the method: [Paschek et al. (2021)](https://doi.org/10.3390/app11188624). Citation metadata is also provided in [`CITATION.cff`](CITATION.cff) (see "Cite this repository" on GitHub).
+If you use this code, please cite it using the DOI provided by Zenodo: [doi:10.5281/zenodo.23111591](https://doi.org/10.5281/zenodo.23111591), and the paper describing the method: [Paschek et al. (2021)](https://doi.org/10.3390/app11188624). Citation metadata is also provided in [`CITATION.cff`](CITATION.cff) (see "Cite this repository" on GitHub).
 
 ## License
 This code is licensed under the [MIT License](LICENSE).
