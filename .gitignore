@@ -1,0 +1,19 @@
+# compiled simulations
+solar_system/solar_system
+trappist-1/trappist-1
+*.o
+
+# generated results and plots (created by 'make run', 'make figures', 'make plots')
+solar_system/results/
+trappist-1/results/
+figures/
+plots/
+
+# editor files
+*.swp
+*.swo
+*~
+*.un~
+
+# Python
+__pycache__/

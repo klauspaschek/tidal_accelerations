@@ -1,0 +1,5 @@
+pdes,Corresponding_Planet,Moon,a,e,w,M,i,node,n,P,Pw,Pnode,R.A.,Dec.,Tilt,GM,GM_sigma,Mean_radius,Mean_radius_sigma,Mean_density,Mean_density_sigma,Magnitude_V0_or_R,Magnitude_V0_or_R_sigma,Geometric_Albedo,Geomatric_Albedo_sigma,Mass,Mass_sigma,referece_plane,epoch 
+Units,,,(km),,(deg),(deg),(deg),(deg),(deg/day),(days),(yr),(yr),(deg),(deg),(deg),(km3/s2),(km3/s2),(km),(km),(g/cm3),(g/cm3),,,,,(kg),(kg),,(days)
+Eris_1,Eris,Dysnomia,37350,0.013,0,0,142,0,22.82236592,15.774,,,,,,,,410,,1.5,,,,,,4.33E+020,0,ecliptic,245154
+Haumea_1,Haumea,Namaka,25657,0.249,178.9,178.5,113.013,205.016,19.695485904,18.2783,,,,,,,,85,,1.5,,,,,,3.9E+018,0,ecliptic,245461
+Haumea_1,Haumea,Hi_iaka,49880,0.0513,0,0,126.356,0,7.328990228,49.12,,,,,,,,160,,1.5,,,,,,2.6E+019,0,ecliptic,245154

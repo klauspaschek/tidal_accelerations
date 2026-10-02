@@ -1,0 +1,47 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below, together with the paper describing the method (see references)."
+title: "tidal accelerations"
+abstract: "C++ simulation of the tidal accelerations that the objects of a planetary system exert on each other, based on the Keplerian orbits of the Sun, planets, moons, asteroids, trans-Neptunian objects, and comets of the solar system, and of the extrasolar planetary system TRAPPIST-1, together with Python3 scripts reproducing the figures of Paschek et al. (2021), Appl. Sci. 11, 8624."
+type: software
+authors:
+  - family-names: Paschek
+    given-names: Klaus
+    orcid: "https://orcid.org/0000-0003-2603-4236"
+    affiliation: "Kirchhoff-Institute for Physics, Heidelberg University, Heidelberg, Germany"
+  - family-names: Roßmann
+    given-names: Arthur
+    affiliation: "Kirchhoff-Institute for Physics, Heidelberg University, Heidelberg, Germany"
+repository-code: "https://github.com/klauspaschek/tidal_accelerations"
+license: MIT
+version: "1.0"
+date-released: 2026-10-02
+references:
+  - type: article
+    title: "Analysis of Tidal Accelerations in the Solar System and in Extrasolar Planetary Systems"
+    authors:
+      - family-names: Paschek
+        given-names: Klaus
+        orcid: "https://orcid.org/0000-0003-2603-4236"
+        affiliation: "Kirchhoff-Institute for Physics, Heidelberg University, Heidelberg, Germany"
+      - family-names: Roßmann
+        given-names: Arthur
+      - family-names: Hausmann
+        given-names: Michael
+      - family-names: Hildenbrand
+        given-names: Georg
+    journal: "Applied Sciences"
+    volume: 11
+    issue: 18
+    start: 8624
+    year: 2021
+    month: 9
+    doi: "10.3390/app11188624"
+keywords:
+  - celestial mechanics
+  - tidal acceleration
+  - tidal heating
+  - solar system
+  - exoplanets
+  - TRAPPIST-1
+  - cryovolcanism
+  - astrobiology
