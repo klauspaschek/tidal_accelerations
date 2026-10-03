@@ -14,7 +14,7 @@ class Parameter_Err : public std::exception
     Parameter_Err(const std::string& index, const std::map<std::string, unsigned int>& parameters)
     {
         m_message = std::string("Parameter '") + index + std::string("' not found - possible parameters: ");
-        for (const std::pair<std::string, unsigned int>& parameter:parameters)
+        for (const std::pair<const std::string, unsigned int>& parameter:parameters)
             m_message += std::string("'") + parameter.first + std::string("' ");
     }
     Parameter_Err() = delete;

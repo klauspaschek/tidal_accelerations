@@ -1,11 +1,11 @@
 # compiled simulations
 solar_system/solar_system
-trappist-1/trappist-1
+exoplanets/planetary_system
 *.o
 
 # generated results and plots (created by 'make run', 'make figures', 'make plots')
 solar_system/results/
-trappist-1/results/
+exoplanets/results/
 figures/
 plots/
 
@@ -17,3 +17,4 @@ plots/
 
 # Python
 __pycache__/
+

@@ -1,5 +1,25 @@
 # Changelog
 
+## v2.0
+
+Corrects the errors of the code used for [Paschek et al. (2021)](https://doi.org/10.3390/app11188624) (see v1.0 below) and adds a general simulation of extrasolar planetary systems. **The results differ from the paper**: most values of {A<sub>total</sub>·ΔA<sub>total</sub>/Δt}<sub>max</sub> are about a factor of 2 lower, as the orbital motion was twice as fast with the wrong true anomaly; the ranking of the objects is mostly unchanged. To reproduce the paper, use v1.0.
+
+### Corrections
+- **True anomaly** (`Body::calc_true_anom()`): now *ν* = 2 atan2(√(1+*e*) sin(*E*/2), √(1−*e*) cos(*E*/2)), the correct relation, without singularity at *E* = ±π.
+- **Kepler's equation** (`Body::calc_ecc_anomaly()`): the mean anomaly is reduced to [−π, π] before solving (it grows to thousands of radians over long time spans), the start value is π for eccentricities ≥ 0.8 (guaranteed monotonic convergence of the Newton–Raphson method), the accuracy is absolute (10<sup>-12</sup> rad), and a failure stops the program instead of continuing with a wrong value. Tested against an independent solution for eccentricities up to 0.9999.
+- **Precession period of zero** (`period_to_d()`): means no precession, so Nix, Kerberos, and S/2004 N 1 are now included.
+- **Strongest perturbers** (`RelevantObjects::update()`): the weakest of the 10 strongest perturbers is replaced if a new one is stronger, without the undefined behavior of v1.0; the result no longer depends on the memory layout.
+- **Epochs of the moons of TNOs**: correct values in `moons_TNOs_v2.csv`.
+- **Time step of the moons**: 0.0125 instead of 0.25 days, which resolves the orbits of the fastest moons (Metis: 15° per time step). With 0.25 days, the inner moons of Jupiter, Saturn, Uranus, and Neptune moved 118-305° per time step (e.g., Despina, Galatea, Larissa, Amalthea), so their ΔA<sub>total</sub> was not resolved. Only every 20th time step is written to the output files.
+- **Overlapping bodies**: if the distance of two bodies is smaller than the sum of their radii, the tidal acceleration (which diverges for a distance equal to the radius) is set to zero with a warning; this happens for the co-orbital moons Janus and Epimetheus in the simplified orbits. Undefined values (NaN) stop the program instead of being set to zero silently.
+- Functions without return value in some branches fixed (no compiler warnings).
+
+### New
+- **Extrasolar planetary systems** (`exoplanets/`): `planetary_system` simulates a system with one star given in a data file, with masses and radii in Earth (star: solar) units, orbital periods in days, and angles in degrees; time step (1/20 of the shortest orbital period) and duration (10 times the longest orbital period) are set automatically if not given. Data file for TRAPPIST-1 with the data of the paper. This replaces the separate setup of TRAPPIST-1 of v1.0, with the same results.
+- **Maxima** of A<sub>total</sub>·ΔA<sub>total</sub>/Δt are determined from all time steps in the simulation and written to `<prefix>_maxima.csv`.
+- `plotting/paper_figures.py` creates the figures of the paper with the current results and compares them with the published values (`figures/comparison_with_paper.csv`); the ranges of the axes adapt to the values, and the labels of the data points in Figures 6 and 7 are placed automatically without overlaps (Figure 6 extends to 10<sup>4</sup> km to make room for the labels of TRAPPIST-1).
+- Unused functions removed from `src/simulation.h`.
+
 ## v1.0
 
 The code and data in the state used for [Paschek et al. (2021)](https://doi.org/10.3390/app11188624), *Applied Sciences*, 11(18), 8624, developed at the Kirchhoff-Institute for Physics, Heidelberg University (2017-2019). This release reproduces the simulations, Figures 1-10, and Table 1 of the paper; it contains the known errors listed below on purpose, they are fixed in the next version.

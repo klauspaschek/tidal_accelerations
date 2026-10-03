@@ -71,14 +71,16 @@ def plot_file(path, output_directory, split=15, parts=None, output_filenames=Non
     tidal_acc[index_total_change][3][0] = 0
     index_total = [i for i, element in enumerate(tidal_acc) if element[0] == "total"][0]
 
+    # split into 'split' parts of equal length, remaining time steps are added to the last part
     n_sub = int(len(time) / split)
 
-    for start_sub in range(0, len(time), n_sub):
+    for start_sub in range(0, split * n_sub, n_sub):
         if parts is not None and number_plot not in parts:
             number_plot += 1
             continue
-        sub = slice(start_sub, start_sub + n_sub)
-        sub_wo_first = slice(start_sub + 1, start_sub + n_sub)
+        end_sub = start_sub + n_sub if number_plot < split else len(time)
+        sub = slice(start_sub, end_sub)
+        sub_wo_first = slice(start_sub + 1, end_sub)
 
         plt.figure(figsize=(15, 10), dpi=300)
 
@@ -194,7 +196,7 @@ def main():
     args = parser.parse_args()
 
     if os.path.isdir(args.input):
-        paths = sorted(os.path.join(args.input, f) for f in os.listdir(args.input) if f.endswith(".csv"))
+        paths = sorted(os.path.join(args.input, f) for f in os.listdir(args.input) if "_tidal_acc_" in f and f.endswith(".csv"))
     else:
         paths = [args.input]
 

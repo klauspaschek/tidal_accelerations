@@ -9,6 +9,8 @@
 #include <iostream>
 #include <algorithm>
 #include <memory>
+#include <set>
+#include <utility>
 
 #include <Eigen/Dense>
 
@@ -276,18 +278,26 @@ class Body
         else
             other_mass = other.m_max_mass;
 
+        // the bodies overlap, e.g., co-orbital moons in the simplified version of the orbits, where all mean anomalies at
+        // epoch are zero: the tidal acceleration is not defined (diverges for r = radius), a warning is given once
+        if (r <= (m_radius + other.m_radius) * 1.e3)
+        {
+            static std::set<std::pair<unsigned int, unsigned int> > s_warned;
+            if (s_warned.insert(std::make_pair(m_id, other.m_id)).second)
+                std::cerr << "Warning: objects '" << m_primary_designation << "_" << m_name << "' and '" << other.m_primary_designation
+                          << "_" << other.m_name << "' overlap at julian date " << s_time << ", tidal acceleration set to zero\n";
+            return Eigen::Vector3d::Zero();
+        }
+
         Eigen::Vector3d result(((6.67408e-11 * other_mass) / std::pow(r, 2)) *
                                ((1. / std::pow(1. - (m_radius * 1.e3 / r), 2)) - 1.) *
                                 (vec_to_other / vto_norm));
 
-        bool contains_nan(false);
         if (std::isnan(result[0]) || std::isnan(result[1]) || std::isnan(result[2]))
-            contains_nan = true;
+            throw Simple_Err(std::string("Tidal acceleration of '") + other.m_name + std::string("' on '") + m_name +
+                             std::string("' is not defined (NaN)"));
 
-        if (contains_nan)
-            return Eigen::Vector3d::Zero();
-        else
-            return result;
+        return result;
     }
 
     std::string info()
@@ -339,7 +349,7 @@ class Body
             return 2. * M_PI / m_orbital_elements(Oe::MEAN_ANOMALY, Oe_type::DOT);
         else if (m_per_day_year == Tu::PER_YEAR)
             return 2. * M_PI * 365.25 / m_orbital_elements(Oe::MEAN_ANOMALY, Oe_type::DOT);
-        else if (m_per_day_year == Tu::PER_CENTURY)
+        else    // Tu::PER_CENTURY
             return 2. * M_PI * 36525. / m_orbital_elements(Oe::MEAN_ANOMALY, Oe_type::DOT);
     }
 
@@ -375,7 +385,7 @@ class Body
             return m_mass;
         else if (mass_type == M_type::MIN)
             return m_min_mass;
-        else if (mass_type == M_type::MAX)
+        else    // M_type::MAX
             return m_max_mass;
     }
 
@@ -447,61 +457,34 @@ class Body
         return ;
     }
 
-    // type alias for member function pointer
-    using ptr_mem_fcn = double (Body::*)(const double&) const;
-
-    // find root of function f
-    // you have to supply f and its derivative as member function pointers
-    double newton_raphson(ptr_mem_fcn f, ptr_mem_fcn f_deriv, const double& x_start, const double& accuracy) const
-    {
-        double x_old(x_start), x_new(0.);
-        for (int i(1); i <= 1.e6; ++i)
-        {
-            x_new = x_old - (this->*f)(x_old) / (this->*f_deriv)(x_old);
-
-            // stop algorithm if accuracy is achieved
-            if (std::abs((x_new - x_old) / x_new) < accuracy)
-            {
-                return x_new;
-            }
-
-            x_old = x_new;
-        }
-
-        std::cerr << "Finding root failed with requested accuracy!" << std::endl;
-
-        return x_new;
-    }
-
-    // transcendental Kepler equation M = E - eccentricity * sin(E) rearranged to
-    // 0 = M - E + eccentricity * sin(E)
-    // Newton-Raphson method is used to get solution for eccentric anomaly E using
-    // mean anomaly M as start value
-    double kepler_equ(const double& ecc_anomaly) const
-    {
-        return m_orbital_elements(Oe::MEAN_ANOMALY, Oe_type::NOW) - ecc_anomaly +
-               m_orbital_elements(Oe::ECCENTRICITY, Oe_type::NOW) * std::sin(ecc_anomaly);
-    }
-
-    // derivative of rearranged Kepler equation needed in Newton_Raphson method
-    double kepler_equ_deriv(const double& ecc_anomaly) const
-    {
-        return m_orbital_elements(Oe::ECCENTRICITY, Oe_type::NOW) * std::cos(ecc_anomaly) - 1.;
-    }
-
-    // Newton-Raphson method is used to get solution for eccentric anomaly E using
-    // mean anomaly M as start value in rearranged Kepler equation
+    // solve Kepler's equation M = E - eccentricity * sin(E) for the eccentric anomaly E with the Newton-Raphson method
     double calc_ecc_anomaly() const
     {
-        return newton_raphson(&Body::kepler_equ, &Body::kepler_equ_deriv, m_orbital_elements(Oe::MEAN_ANOMALY, Oe_type::NOW), 1.e-9);
+        // reduce mean anomaly to [-pi, pi], as it grows large over long time spans
+        double mean_anom(std::remainder(m_orbital_elements(Oe::MEAN_ANOMALY, Oe_type::NOW), 2. * M_PI));
+        double ecc(m_orbital_elements(Oe::ECCENTRICITY, Oe_type::NOW));
+
+        // start value converging also for high eccentricities
+        double ecc_anom((ecc < 0.8) ? mean_anom : ((mean_anom < 0.) ? -M_PI : M_PI));
+        for (int i(0); i < 100; ++i)
+        {
+            double delta((ecc_anom - ecc * std::sin(ecc_anom) - mean_anom) / (1. - ecc * std::cos(ecc_anom)));
+            ecc_anom -= delta;
+
+            // stop algorithm if accuracy is achieved
+            if (std::abs(delta) < 1.e-12)
+                return ecc_anom;
+        }
+
+        throw Simple_Err(std::string("Solving Kepler's equation failed for object '") + m_name + std::string("'"));
     }
 
     // calculate true anomaly T using eccentric anomaly E
     double calc_true_anom() const
     {
-        return 2. * std::atan(std::sqrt((1. + m_orbital_elements(Oe::ECCENTRICITY, Oe_type::NOW)) /
-                                        (1. + m_orbital_elements(Oe::ECCENTRICITY, Oe_type::NOW))) *
-                              std::tan(calc_ecc_anomaly()));
+        double ecc(m_orbital_elements(Oe::ECCENTRICITY, Oe_type::NOW)), ecc_anom(calc_ecc_anomaly());
+
+        return 2. * std::atan2(std::sqrt(1. + ecc) * std::sin(ecc_anom / 2.), std::sqrt(1. - ecc) * std::cos(ecc_anom / 2.));
     }
 
     // calculate distance r of object to central object in focal point of elliptical orbit

@@ -1,6 +1,6 @@
 # Input data: solar system
 
-Data as used for [Paschek et al. (2021)](https://doi.org/10.3390/app11188624), collected in 2017/2018. The content is identical to the files used for the paper, only the line endings were converted to Linux (LF) and the epochs of three moons are given as effectively read for the paper (see [Known quirks](#known-quirks)).
+Data as used for [Paschek et al. (2021)](https://doi.org/10.3390/app11188624), collected in 2017/2018. The content is identical to the files used for the paper, only the line endings were converted to Linux (LF) (see [Notes](#notes)).
 
 | File | Objects | Header lines | Source |
 | ------ | ------ | ------ | ------ |
@@ -17,8 +17,8 @@ The mass and radius of the Sun (1.9884 × 10<sup>30</sup> kg, 696342 km) are tak
 
 **Units:** angles in degrees, mean motion `n` in degrees/day, semi-major axis `a` in au (moons: km), masses in kg, radii and diameters in km, epochs in julian date; the precession periods `Pnode` and `Pw` of the moons are given in years.
 
-## Known quirks
+## Notes
 
-**Line endings and epochs of the moons of TNOs.** Most of the original files had Windows line endings (CRLF). The CSV reader used for the paper removed the last character of every line, which is the carriage return for these files. `moons_TNOs_v2.csv`, however, had Linux line endings, so the last digit of its last column (`epoch`) was cut off: the epochs of Dysnomia, Namaka, and Hi'iaka were read as 245154 and 245461 instead of 2451545 and 2454615, which shifts the orbital phase of these three moons. Version 1.0 has a CSV reader that works correctly for both line endings, and all files are given with Linux line endings; to reproduce the results of the paper, the epochs of these three moons are given in `moons_TNOs_v2.csv` with the values effectively used in the paper (245154 and 245461). They are corrected in the next version.
+**Epochs of the moons of TNOs.** Due to the CSV reader used for the paper, the epochs of Dysnomia, Namaka, and Hi'iaka in `moons_TNOs_v2.csv` were read without their last digit (245154 and 245461 instead of 2451545 and 2454615). Version 1.0 reproduces this with the values as effectively read; since version 2.0, the correct values are given and used.
 
-**Moons with a precession period of zero.** The moons Nix, Kerberos, and S/2004 N 1 have a precession period (`Pw`, `Pnode`) of `0.000`, meaning no precession, which version 1.0 interprets as an infinite rate of precession, so their orbits are undefined and they do not contribute to the results (see `CHANGELOG.md`). This also causes the messages "Finding root failed with requested accuracy!" during the simulation.
+**Moons with a precession period of zero.** The moons Nix, Kerberos, and S/2004 N 1 have a precession period (`Pw`, `Pnode`) of `0.000`, meaning no precession. Version 1.0 interpreted this as an infinite rate of precession, so that these moons did not contribute to the results; since version 2.0 they are treated as not precessing.

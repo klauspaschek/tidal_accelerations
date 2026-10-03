@@ -13,7 +13,7 @@ These files contain the classification of the objects shown in Figures 5-7 of [P
 
 | File | Figure | Content |
 | ------ | ------ | ------ |
-| `fig5_volcanism_ranking.csv` | 5 | objects in the order shown in the figure: first the objects with known volcanism/subsurface ocean, then the new candidates |
+| `fig5_volcanism_ranking.csv` | 5 | objects in the order of the paper: first the 27 objects with known volcanism/subsurface ocean, then the new candidates (within both groups, the figure is sorted by the current values) |
 | `fig6_objects_full.csv` | 6 | objects of the simulation with full orbital elements and the planets of TRAPPIST-1, with radius `R` (km) and eccentricity `e`; the column `class` gives the type of object (in German) |
 | `fig7_objects_simplified.csv` | 7 | the same for the simulation with simplified orbital elements |
 

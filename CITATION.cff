@@ -1,7 +1,7 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below, together with the paper describing the method (see references)."
 title: "tidal accelerations"
-abstract: "C++ simulation of the tidal accelerations that the objects of a planetary system exert on each other, based on the Keplerian orbits of the Sun, planets, moons, asteroids, trans-Neptunian objects, and comets of the solar system, and of the extrasolar planetary system TRAPPIST-1, together with Python3 scripts reproducing the figures of Paschek et al. (2021), Appl. Sci. 11, 8624."
+abstract: "C++ simulation of the tidal accelerations that the objects of a planetary system exert on each other, based on the Keplerian orbits of the Sun, planets, moons, asteroids, trans-Neptunian objects, and comets of the solar system, and of extrasolar planetary systems such as TRAPPIST-1, together with Python3 scripts for the figures of Paschek et al. (2021), Appl. Sci. 11, 8624. Version 1.0 reproduces the paper, version 2.0 corrects its errors."
 type: software
 authors:
   - family-names: Paschek
@@ -13,8 +13,8 @@ authors:
     affiliation: "Kirchhoff-Institute for Physics, Heidelberg University, Heidelberg, Germany"
 repository-code: "https://github.com/klauspaschek/tidal_accelerations"
 license: MIT
-version: "1.0"
-date-released: 2026-10-02
+version: "2.0"
+date-released: 2026-10-03
 references:
   - type: article
     title: "Analysis of Tidal Accelerations in the Solar System and in Extrasolar Planetary Systems"

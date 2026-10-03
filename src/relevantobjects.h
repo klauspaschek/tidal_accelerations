@@ -8,6 +8,7 @@
 #include <utility>
 #include <algorithm>
 #include <cmath>
+#include <array>
 
 #include <Eigen/Dense>
 
@@ -32,10 +33,15 @@ class RelevantObjects
     mutable vec_smrtptr<Body> m_relevant_objects;
     mutable bool m_relevant_objects_calculated;
 
+    // maximal values of A_total * Delta A_total / Delta t for mean, minimal, and maximal mass, and time of the maximum
+    std::array<double, 3> m_max_a_da_dt;
+    double m_time_max_a_da_dt;
+
   public:
     RelevantObjects(smrtptr<Body> object, unsigned int n_max_tidal, unsigned int n_var_tidal/*, unsigned int iterations*/)
     : m_object(object), m_n_max_tidal(n_max_tidal), m_n_var_tidal(n_var_tidal),
-      m_first_update(true), m_relevant_objects_calculated(false)
+      m_first_update(true), m_relevant_objects_calculated(false),
+      m_max_a_da_dt{ {0., 0., 0.} }, m_time_max_a_da_dt(0.)
     {}
 
     void update(const vec_vec_smrtptr<Body>& other_objects)
@@ -61,32 +67,16 @@ class RelevantObjects
                     }
                     else
                     {
-                        // Version 1.0 reproduces the selection of the original code used for the paper, which erased
-                        // map elements while iterating over the map: if the erased element was the current one, the
-                        // iterator was left dangling (undefined behavior, crashes with current compilers/glibc). With
-                        // the allocator of 2018, the freed node was reused for the newly inserted perturber, so the
-                        // iteration continued from there. This is emulated here with well-defined code. Note that the
-                        // loop does not stop after replacing the weakest entry, so the map can shrink below
-                        // n_max_tidal and is refilled by the following perturbers (see CHANGELOG.md).
-                        std::map<smrtptr<Body>, double>::const_iterator it(m_max_objects.begin());
-                        while (it != m_max_objects.end())
-                        {
-                            if (norm > it->second)
+                        // replace the weakest entry, if the new perturber is stronger
+                        std::map<smrtptr<Body>, double>::iterator it_min(std::min_element(m_max_objects.begin(), m_max_objects.end(),
+                            [](const std::pair<const smrtptr<Body>, double>& a, const std::pair<const smrtptr<Body>, double>& b)
                             {
-                                double min(it->second);
-                                smrtptr<Body> min_object(it->first);
-                                for (std::map<smrtptr<Body>, double>::const_iterator it_min(m_max_objects.begin()); it_min!=m_max_objects.end(); ++it_min)
-                                    if (it_min->second < min)
-                                    {
-                                        min = it_min->second;
-                                        min_object = it_min->first;
-                                    }
-                                smrtptr<Body> current_object(it->first);
-                                m_max_objects.erase(min_object);
-                                m_max_objects[other_object] = norm;
-                                it = m_max_objects.find((current_object == min_object) ? other_object : current_object);
-                            }
-                            ++it;
+                                return a.second < b.second;
+                            }));
+                        if (norm > it_min->second)
+                        {
+                            m_max_objects.erase(it_min);
+                            m_max_objects[other_object] = norm;
                         }
                     }
 
@@ -137,7 +127,7 @@ class RelevantObjects
                                                                                 });
 
             unsigned int i(0);
-            for (unsigned int j(0); i < m_n_var_tidal; ++j)
+            for (unsigned int j(0); i < m_n_var_tidal && j < var_relevant_objects.size(); ++j)
             {
                 smrtptr<Body> current_object(var_relevant_objects.at(j).first);
                 if (std::none_of(m_relevant_objects.begin(), m_relevant_objects.end(), [current_object](smrtptr<Body> element)
@@ -153,6 +143,26 @@ class RelevantObjects
         }
 
         return m_relevant_objects;
+    }
+
+    void update_max_a_da_dt(const std::array<double, 3>& a_da_dt, double time)
+    {
+        if (a_da_dt[0] > m_max_a_da_dt[0])
+            m_time_max_a_da_dt = time;
+        for (unsigned int i(0); i < 3; ++i)
+            m_max_a_da_dt[i] = std::max(m_max_a_da_dt[i], a_da_dt[i]);
+
+        return ;
+    }
+
+    std::array<double, 3> get_max_a_da_dt() const
+    {
+        return m_max_a_da_dt;
+    }
+
+    double get_time_max_a_da_dt() const
+    {
+        return m_time_max_a_da_dt;
     }
 
     double get_max_value() const

@@ -1,0 +1,10 @@
+type,name,mass,mass_min,mass_max,radius,period,a,e,i,omega,Omega,M0,reference
+Units,,M_earth (star: M_sun),M_earth (star: M_sun),M_earth (star: M_sun),R_earth (star: R_sun),days,au,,deg,deg,deg,deg,
+star,TRAPPIST-1,0.089,,,0.121,,,,,,,,Van Grootel et al. (2018)
+planet,TRAPPIST-1 b,1.01730652,0.8742634205,1.171352935,1.120993497,1.51087637,0.01154775,0.00622,89.56,,,,"Grimm et al. (2018): mass a e; Delrez et al. (2018): n R; Gillon et al. (2017), Delrez et al. (2018): i"
+planet,TRAPPIST-1 c,1.156348414,1.025308931,1.298391213,1.094993648,2.42180746,0.01581512,0.00654,89.7,,,,"Grimm et al. (2018): mass a e; Delrez et al. (2018): n R; Gillon et al. (2017), Delrez et al. (2018): i"
+planet,TRAPPIST-1 d,0.2970895148,0.2620789659,0.3361012692,0.783995452,4.049959,0.02228038,0.00837,89.89,,,,"Grimm et al. (2018): mass a e; Delrez et al. (2018): n R; Gillon et al. (2017), Delrez et al. (2018): i"
+planet,TRAPPIST-1 e,0.7722326781,0.6972100733,0.8512564884,0.909994721,6.099043,0.02928285,0.0051,89.736,,,,"Grimm et al. (2018): mass a e; Delrez et al. (2018): n R; Gillon et al. (2017), Delrez et al. (2018): i"
+planet,TRAPPIST-1 f,0.9342815043,0.8562579954,1.014305616,1.045993932,9.205585,0.03853361,0.01007,89.719,,,,"Grimm et al. (2018): mass a e; Delrez et al. (2018): n R; Gillon et al. (2017), Delrez et al. (2018): i"
+planet,TRAPPIST-1 g,1.148346003,1.05331737,1.24637554,1.14799334,12.354473,0.04687692,0.00208,89.721,,,,"Grimm et al. (2018): mass a e; Delrez et al. (2018): n R; Gillon et al. (2017), Delrez et al. (2018): i"
+planet,TRAPPIST-1 h,0.3310997622,0.2820849938,0.3871166404,0.7729955158,18.767953,0.06193488,0.00567,89.796,,,,"Grimm et al. (2018): mass a e; Delrez et al. (2018): n R; Gillon et al. (2017), Delrez et al. (2018): i"

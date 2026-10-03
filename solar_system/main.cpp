@@ -178,17 +178,19 @@ int main(int argc, char* argv[])
 
         vec_smrtptr<RelevantObjects> relevant_objects;
 
+        // first run: 1950 Jan. 01 - 2541 (about 590 years), time step of 90 days,
+        // for asteroids, TNOs, comets, moons of TNOs, terrestrial planets, and Pluto
         double time_step(90.);
         unsigned int iterations(2400);
 
-       std::cout << "Start search for relevant objects... (1/4)\nProgress:\n";
-       prep_relevant_objects(objects, relevant_objects, time_step, iterations, 10, 10);
-       std::cout << "...finished\n";
+        std::cout << "Start search for relevant objects... (1/4)\nProgress:\n";
+        prep_relevant_objects(objects, relevant_objects, time_step, iterations, 10, 10);
+        std::cout << "...finished\n";
 
-       std::cout << "Start time iteration for calculation of tidal accelerations... (2/4)\nProgress:\n";
-       time_iteration(objects, directory + sub_directory_tidal_acc, "delta_t_90d", time_step, iterations,
-                      prep_tidal_acc_relevant, calc_tidal_acc_relevant, min_tidal_value, max_tidal_value, true);
-       std::cout << "...finished\n";
+        std::cout << "Start time iteration for calculation of tidal accelerations... (2/4)\nProgress:\n";
+        time_iteration(objects, directory + sub_directory_tidal_acc, "delta_t_90d", time_step, iterations,
+                       min_tidal_value, max_tidal_value);
+        std::cout << "...finished\n";
 
 
         // set calculation for tidal acceleration only for moons to prepare new time iteration
@@ -203,28 +205,22 @@ int main(int argc, char* argv[])
 
         relevant_objects.clear();
 
+        // second run: 1999 May 05 - 2000 Dec. 25 (600 days), for moons, terrestrial planets, Pluto, Eris, and Haumea
+        // the time step of 0.0125 days resolves the orbits of the fastest moons (Metis: 0.295 days, 15 degrees per
+        // time step), every 20th time step is written to the output files (every 0.25 days)
         Body::s_time = 2451304.;    // 1999 May 05. 12:00 UT
 
-        time_step = 0.25;
+        time_step = 0.0125;
+        iterations = 48000;
 
         std::cout << "Start search for relevant objects... (3/4)\nProgress:\n";
         prep_relevant_objects(objects, relevant_objects, time_step, iterations, 10, 10);
         std::cout << "...finished\n";
 
-//        write_promising_objects(objects, min_tidal_value);
-
         std::cout << "Start time iteration for calculation of tidal accelerations... (4/4)\nProgress:\n";
-        time_iteration(objects, directory + sub_directory_tidal_acc, "delta_t_0_25d", time_step, iterations,
-                       prep_tidal_acc_relevant, calc_tidal_acc_relevant, min_tidal_value, max_tidal_value, true);
+        time_iteration(objects, directory + sub_directory_tidal_acc, "delta_t_0_0125d", time_step, iterations,
+                       min_tidal_value, max_tidal_value, 20);
         std::cout << "...finished\n";
-
-//        std::cout << "Start calculating and saving orbital periods of objects...";
-//        write_orb_periods(objects);
-//        std::cout << "finished\n";
-
-//        std::cout << "Start time iteration for calculation of positions...\nProgress:\n";
-//        time_iteration(objects, "/home/klaus/Documents/Studium/Sem7/Bachelor/positions", "moons_new",
-//                       0.5, 1000, prep_positions, write_positions);
 
         std::cout << "\n*** Done! ***\n";
     }

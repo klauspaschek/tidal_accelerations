@@ -139,7 +139,7 @@ class CSVData
         std::vector<std::string> parameters;
         for (unsigned int i(0); i < m_param_indices.size(); ++i)
         {
-            for (const std::pair<std::string, unsigned int>& parameter:m_param_indices)
+            for (const std::pair<const std::string, unsigned int>& parameter:m_param_indices)
             {
                 if (parameter.second == i)
                     parameters.push_back(parameter.first);
