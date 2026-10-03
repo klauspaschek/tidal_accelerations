@@ -154,7 +154,7 @@ The time span is split into 15 parts (option `--split`), each plotted as a **png
 `make plots` creates the bar charts for all objects of all simulations in `plots/` (about 5000 plots at 300 dpi, which takes one to two hours on a computer with 12 cores).
 
 ## Citation
-If you use this code, please cite it using the DOI provided by Zenodo: [doi:10.5281/zenodo.23111591](https://doi.org/10.5281/zenodo.23111591) (all versions; version 1.0 with the state of the paper: [doi:10.5281/zenodo.23111592](https://doi.org/10.5281/zenodo.23111592)), and the paper describing the method: [Paschek et al. (2021)](https://doi.org/10.3390/app11188624). Citation metadata is also provided in [`CITATION.cff`](CITATION.cff) (see "Cite this repository" on GitHub).
+If you use this code, please cite it using the DOI provided by Zenodo: [doi:10.5281/zenodo.23111591](https://doi.org/10.5281/zenodo.23111591) (all versions; version 1.0 with the state of the paper: [doi:10.5281/zenodo.23111592](https://doi.org/10.5281/zenodo.23111592); version 2.0 with the corrected code: [doi:10.5281/zenodo.23122749](https://doi.org/10.5281/zenodo.23122749)), and the paper describing the method: [Paschek et al. (2021)](https://doi.org/10.3390/app11188624). Citation metadata is also provided in [`CITATION.cff`](CITATION.cff) (see "Cite this repository" on GitHub).
 
 ## License
 This code is licensed under the [MIT License](LICENSE).
